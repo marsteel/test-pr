@@ -15,7 +15,7 @@ jobs:
         id: generate
         run: |
           PR_NUMBER=${{ github.event.pull_request.number }}
-          UNIQUE_NAME="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
+          UNIQUE_NAME="pr-${PR_NUMBER}"
           echo "Generated UNIQUE_NAME=$UNIQUE_NAME"
           echo "unique_name=${UNIQUE_NAME}.tfplan" >> "$GITHUB_OUTPUT"
       - name: Create file named as unique name
