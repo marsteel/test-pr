@@ -15,7 +15,7 @@ jobs:
       - name: Generate unique name based on PR number
         id: generate
         run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
+          PR_NUMBER=${{ github.event.issue.number }}
           UNIQUE_NAME="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
           echo "unique_name=${UNIQUE_NAME}.tfplan" >> "$GITHUB_OUTPUT"
       - name: Download the artifact
