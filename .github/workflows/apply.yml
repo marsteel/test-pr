@@ -1,0 +1,34 @@
+name: PR Apply Download
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  download-artifact-on-apply:
+    runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, '/apply')
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Find latest workflow run for PR and download artifact
+        uses: actions/github-script@v6
+        id: download-artifact
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate unique name based on PR number
+        id: generate
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          UNIQUE_NAME="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
+          echo "unique_name=$UNIQUE_NAME" >> $GITHUB_OUTPUT
+      - name: Download the artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: unique-name-file
+          path: downloaded
+
+      - name: Display contents of downloaded file
+        run: |
+          ls downloaded
+          cat downloaded/"${{ steps.generate.outputs.unique_name }}".txt
