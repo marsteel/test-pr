@@ -17,8 +17,7 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           UNIQUE_NAME="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
           echo "Generated UNIQUE_NAME=$UNIQUE_NAME"
-          echo "unique_name=$UNIQUE_NAME" >> $GITHUB_OUTPUT
-
+          echo "unique_name=${UNIQUE_NAME}.tfplan" >> "$GITHUB_OUTPUT"
       - name: Create file named as unique name
         run: |
           echo "This is the unique name file for PR #${{ github.event.pull_request.number }}" > "${{ steps.generate.outputs.unique_name }}".txt
@@ -26,5 +25,5 @@ jobs:
       - name: Upload unique name file as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: unique-name-file
+          name: ${{ steps.generate.outputs.unique_name }}
           path: "${{ steps.generate.outputs.unique_name }}.txt"
