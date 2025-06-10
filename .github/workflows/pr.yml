@@ -19,6 +19,12 @@ jobs:
           echo "Generated UNIQUE_NAME=$UNIQUE_NAME"
           echo "unique_name=$UNIQUE_NAME" >> $GITHUB_OUTPUT
 
-      - name: Use the unique name
+      - name: Create file named as unique name
         run: |
-          echo "The unique name for this PR is ${{ steps.generate.outputs.unique_name }}"
+          echo "This is the unique name file for PR #${{ github.event.pull_request.number }}" > "${{ steps.generate.outputs.unique_name }}".txt
+
+      - name: Upload unique name file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unique-name-file
+          path: "${{ steps.generate.outputs.unique_name }}".txt
