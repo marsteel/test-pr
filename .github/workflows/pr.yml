@@ -1,0 +1,24 @@
+name: PR Unique Name
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  generate-unique-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get PR number and generate unique name
+        id: generate
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          UNIQUE_NAME="pr-${PR_NUMBER}-$(openssl rand -hex 4)"
+          echo "Generated UNIQUE_NAME=$UNIQUE_NAME"
+          echo "unique_name=$UNIQUE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Use the unique name
+        run: |
+          echo "The unique name for this PR is ${{ steps.generate.outputs.unique_name }}"
